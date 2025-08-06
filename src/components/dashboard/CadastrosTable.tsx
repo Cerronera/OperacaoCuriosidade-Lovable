@@ -42,55 +42,46 @@ export const CadastrosTable = () => {
   const fetchCadastros = async (filterType = "all") => {
     setLoading(true);
     
-    // TODO: Replace with actual Supabase query when database is set up
-    // For now, using mock data that matches the reference image
-    const mockData: Cadastro[] = [
-      {
-        id: "1",
-        nome: "Pablo de Arruda Santos",
-        email: "pablosantos1990@hotmail.com",
-        telefone: "11998208990",
-        status: "Inativo",
-        data: "21/07/2025"
-      },
-      {
-        id: "2",
-        nome: "Rafael Augusto Cerrone",
-        email: "rafael_cerrone@hotmail.com",
-        telefone: "11973900600",
-        status: "Ativo",
-        data: "22/06/2025"
-      },
-      {
-        id: "3",
-        nome: "Matheus Heron Ferreira dos Santos",
-        email: "matheus.heron@hotmail.com.br",
-        telefone: "11992391219",
-        status: "Inativo",
-        data: "10/05/2025"
-      },
-      {
-        id: "4",
-        nome: "Daniel Ghinato Seidenthal",
-        email: "daniel.seidenthal@gmail.com",
-        telefone: "11997928033",
-        status: "Ativo",
-        data: "10/05/2025"
+    try {
+      let query = (supabase as any)
+        .from('Customers')
+        .select('id, nome, email, telefone, status, created_at')
+        .order('created_at', { ascending: false });
+
+      // Apply filter logic
+      if (filterType === "last30days") {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        query = query.gte('created_at', thirtyDaysAgo.toISOString());
+      } else if (filterType === "pending") {
+        query = query.eq('revisado', false);
       }
-    ];
 
-    // Apply filter logic
-    let filteredData = mockData;
-    if (filterType === "last30days") {
-      // Mock filtering - in real app would filter by date
-      filteredData = mockData.slice(0, 2);
-    } else if (filterType === "pending") {
-      // Mock filtering - in real app would filter by pending status
-      filteredData = mockData.filter(c => c.status === "Inativo");
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching customers:', error);
+        setCadastros([]);
+        return;
+      }
+
+      // Transform data to match interface
+      const transformedData: Cadastro[] = (data || []).map(customer => ({
+        id: customer.id.toString(),
+        nome: customer.nome,
+        email: customer.email,
+        telefone: customer.telefone,
+        status: customer.status ? "Ativo" : "Inativo",
+        data: new Date(customer.created_at).toLocaleDateString('pt-BR')
+      }));
+
+      setCadastros(transformedData);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      setCadastros([]);
+    } finally {
+      setLoading(false);
     }
-
-    setCadastros(filteredData);
-    setLoading(false);
   };
 
   const getStatusColor = (status: string) => {
