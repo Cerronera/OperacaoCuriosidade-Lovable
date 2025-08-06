@@ -14,13 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      Customers: {
+        Row: {
+          created_at: string
+          email: string
+          endereco: string
+          id: number
+          idade: number
+          interesses: string | null
+          nome: string
+          outras_informacoes: string | null
+          revisado: boolean
+          sentimentos: string | null
+          status: boolean
+          telefone: string
+          valores: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          endereco: string
+          id?: number
+          idade: number
+          interesses?: string | null
+          nome: string
+          outras_informacoes?: string | null
+          revisado?: boolean
+          sentimentos?: string | null
+          status?: boolean
+          telefone: string
+          valores?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          endereco?: string
+          id?: number
+          idade?: number
+          interesses?: string | null
+          nome?: string
+          outras_informacoes?: string | null
+          revisado?: boolean
+          sentimentos?: string | null
+          status?: boolean
+          telefone?: string
+          valores?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_dashboard_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
