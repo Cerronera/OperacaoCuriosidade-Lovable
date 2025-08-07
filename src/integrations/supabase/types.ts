@@ -62,6 +62,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+          role: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+          role?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -69,6 +90,17 @@ export type Database = {
     Functions: {
       get_dashboard_stats: {
         Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      get_paginated_clientes: {
+        Args: {
+          page_number?: number
+          page_size?: number
+          filter_type?: string
+          sort_by?: string
+          sort_direction?: string
+          search_term?: string
+        }
         Returns: Json
       }
     }
