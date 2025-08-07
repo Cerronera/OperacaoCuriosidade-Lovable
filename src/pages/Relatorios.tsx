@@ -114,7 +114,7 @@ const Relatorios = () => {
               <Button 
                 onClick={handlePrint}
                 disabled={isPrinting}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Printer className="w-4 h-4 mr-2" />
                 {isPrinting ? "Preparando..." : "Imprimir"}

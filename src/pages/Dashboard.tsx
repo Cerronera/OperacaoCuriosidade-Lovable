@@ -9,6 +9,7 @@ import { CadastrosTable } from "@/components/dashboard/CadastrosTable";
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,10 +51,10 @@ const Dashboard = () => {
     <div className="min-h-screen bg-[#f2f2f2] flex">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Header user={user} />
+        <Header user={user} onSearchChange={setSearchQuery} />
         <main className="flex-1 p-6 space-y-6">
           <StatsCards />
-          <CadastrosTable />
+          <CadastrosTable searchQuery={searchQuery} />
         </main>
       </div>
     </div>

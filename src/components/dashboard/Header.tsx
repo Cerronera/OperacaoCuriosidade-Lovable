@@ -1,5 +1,5 @@
 import { Search, Sun, Moon, User, LogOut, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ interface HeaderProps {
 export const Header = ({ user, onSearchChange }: HeaderProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   const handleLogout = async () => {
     try {
@@ -38,6 +39,28 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
     setIsDarkMode(!isDarkMode);
     // Here you would implement actual theme switching
   };
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (!error && data) {
+          setUserProfile(data);
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user]);
 
   return (
     <header className="bg-white rounded-lg m-4 mb-0 p-4 shadow-sm">
@@ -73,15 +96,6 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
             )}
           </Button>
 
-          {/* New Administrator Button */}
-          <Button 
-            variant="outline" 
-            className="text-black border-gray-200 hover:bg-[#e3eff0]"
-          >
-            <UserPlus className="w-4 h-4 mr-2" />
-            Novo Administrador
-          </Button>
-
           {/* User Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -96,8 +110,14 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
             <DropdownMenuContent align="end" className="bg-white">
               <DropdownMenuItem className="text-black">
                 <User className="w-4 h-4 mr-2" />
-                Administrador
+                {userProfile?.nome || user?.email || 'Usuário'}
               </DropdownMenuItem>
+              {userProfile?.role === 'Administrator' && (
+                <DropdownMenuItem className="text-black">
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Novo Administrador
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={handleLogout} className="text-black">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout

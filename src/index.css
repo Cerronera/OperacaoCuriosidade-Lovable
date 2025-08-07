@@ -128,6 +128,27 @@ All colors MUST be HSL.
     display: none !important;
   }
   
+  /* Hide sidebar and expand main content */
+  .min-h-screen.bg-gray-50.flex > div:first-child,
+  .min-h-screen.bg-\\[\\#f2f2f2\\].flex > div:first-child {
+    display: none !important;
+  }
+  
+  .min-h-screen.bg-gray-50.flex > div:last-child,
+  .min-h-screen.bg-\\[\\#f2f2f2\\].flex > div:last-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  /* Center the main content */
+  main {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+  }
+  
   /* Ensure table takes full width in print */
   table {
     width: 100% !important;

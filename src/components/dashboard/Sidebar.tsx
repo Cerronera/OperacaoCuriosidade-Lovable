@@ -1,15 +1,13 @@
 import { Home, Users, BarChart3 } from "lucide-react";
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const navigationItems = [
-  { name: "Home", icon: Home, active: true },
-  { name: "Cadastro", icon: Users, active: false },
-  { name: "Relatórios", icon: BarChart3, active: false },
+  { name: "Home", icon: Home, path: "/dashboard" },
+  { name: "Cadastro", icon: Users, path: "/cadastros" },
+  { name: "Relatórios", icon: BarChart3, path: "/relatorios" },
 ];
 
 export const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState("Home");
-
   return (
     <div className="w-64 bg-white rounded-lg m-4 mr-0 p-4 shadow-sm">
       {/* Logo and Brand */}
@@ -24,21 +22,22 @@ export const Sidebar = () => {
       <nav className="space-y-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeItem === item.name;
           
           return (
-            <button
+            <NavLink
               key={item.name}
-              onClick={() => setActiveItem(item.name)}
-              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                isActive 
-                  ? "bg-[#e3eff0] text-black" 
-                  : "text-black hover:bg-[#e3eff0]"
-              }`}
+              to={item.path}
+              className={({ isActive }) =>
+                `w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                  isActive 
+                    ? "bg-[#e3eff0] text-black" 
+                    : "text-black hover:bg-[#e3eff0]"
+                }`
+              }
             >
               <Icon className="w-5 h-5" />
               <span>{item.name}</span>
-            </button>
+            </NavLink>
           );
         })}
       </nav>
