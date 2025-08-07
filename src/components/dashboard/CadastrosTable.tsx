@@ -247,31 +247,21 @@ export const CadastrosTable = ({
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-black">Cadastros de Clientes</h2>
-        {!showActionsColumn && (
-          <div className="w-80">
-            <Input
-              placeholder="Pesquisar por nome..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
-            />
-          </div>
-        )}
+        <h2 className="text-xl font-semibold text-black dark:text-white">Cadastros de Clientes</h2>
       </div>
       
       {loading ? (
-        <div className="text-center py-8 text-gray-500">Carregando...</div>
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">Carregando...</div>
       ) : (
         <>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-100">
+                <TableRow className="bg-gray-100 dark:bg-gray-700">
                   <TableHead 
-                    className="text-black font-medium cursor-pointer hover:bg-gray-200 select-none"
+                    className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("nome")}
                   >
                     <div className="flex items-center gap-1">
@@ -280,7 +270,7 @@ export const CadastrosTable = ({
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-black font-medium cursor-pointer hover:bg-gray-200 select-none"
+                    className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("email")}
                   >
                     <div className="flex items-center gap-1">
@@ -288,9 +278,9 @@ export const CadastrosTable = ({
                       {getSortIcon("email")}
                     </div>
                   </TableHead>
-                  <TableHead className="text-black font-medium">TELEFONE</TableHead>
+                  <TableHead className="text-black dark:text-white font-medium">TELEFONE</TableHead>
                   <TableHead 
-                    className="text-black font-medium cursor-pointer hover:bg-gray-200 select-none"
+                    className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("status")}
                   >
                     <div className="flex items-center gap-1">
@@ -299,7 +289,7 @@ export const CadastrosTable = ({
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="text-black font-medium cursor-pointer hover:bg-gray-200 select-none"
+                    className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("created_at")}
                   >
                     <div className="flex items-center gap-1">
@@ -308,7 +298,7 @@ export const CadastrosTable = ({
                     </div>
                   </TableHead>
                   {showActionsColumn && (
-                    <TableHead className="text-black font-medium text-center">
+                    <TableHead className="text-black dark:text-white font-medium text-center">
                       AÇÕES
                     </TableHead>
                   )}
@@ -317,7 +307,7 @@ export const CadastrosTable = ({
               <TableBody>
                 {cadastros.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={showActionsColumn ? 6 : 5} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={showActionsColumn ? 6 : 5} className="text-center py-8 text-gray-500 dark:text-gray-400">
                       Nenhum cadastro encontrado
                     </TableCell>
                   </TableRow>
@@ -325,16 +315,16 @@ export const CadastrosTable = ({
                   cadastros.map((cadastro) => (
                     <TableRow 
                       key={cadastro.id} 
-                      className={`hover:bg-[#e3eff0] ${showActionsColumn ? 'cursor-pointer' : ''}`}
+                      className={`hover:bg-[#e3eff0] dark:hover:bg-gray-700 ${showActionsColumn ? 'cursor-pointer' : ''}`}
                       onClick={showActionsColumn ? () => handleRowClick(cadastro) : undefined}
                     >
-                      <TableCell className="text-black">{cadastro.nome}</TableCell>
-                      <TableCell className="text-black">{cadastro.email}</TableCell>
-                      <TableCell className="text-black">{cadastro.telefone}</TableCell>
+                      <TableCell className="text-black dark:text-white">{cadastro.nome}</TableCell>
+                      <TableCell className="text-black dark:text-white">{cadastro.email}</TableCell>
+                      <TableCell className="text-black dark:text-white">{cadastro.telefone}</TableCell>
                       <TableCell className={getStatusColor(cadastro.status)}>
                         {cadastro.status}
                       </TableCell>
-                      <TableCell className="text-black">{cadastro.data}</TableCell>
+                      <TableCell className="text-black dark:text-white">{cadastro.data}</TableCell>
                       {showActionsColumn && (
                         <TableCell className="text-center">
                           <Button
@@ -370,7 +360,7 @@ export const CadastrosTable = ({
           
           {totalCount > 0 && (
             <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 Mostrando {((currentPage - 1) * pageSize) + 1} a {Math.min(currentPage * pageSize, totalCount)} de {totalCount} resultados
               </div>
               

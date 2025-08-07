@@ -41,14 +41,14 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f2f2f2]">
-        <div className="text-lg">Carregando...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#f2f2f2] dark:bg-gray-900">
+        <div className="text-lg text-black dark:text-white">Carregando...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f2f2f2] flex">
+    <div className="min-h-screen bg-[#f2f2f2] dark:bg-gray-900 flex">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header user={user} onSearchChange={setSearchQuery} />

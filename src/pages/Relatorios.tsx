@@ -103,14 +103,14 @@ const Relatorios = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-[#f2f2f2] dark:bg-gray-900 flex">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header user={null} onSearchChange={setSearchQuery} />
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6 no-print">
-              <h1 className="text-3xl font-bold text-gray-900">Relatórios</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Relatórios</h1>
               <Button 
                 onClick={handlePrint}
                 disabled={isPrinting}

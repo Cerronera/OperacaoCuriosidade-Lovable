@@ -17,7 +17,12 @@ interface HeaderProps {
 }
 
 export const Header = ({ user, onSearchChange }: HeaderProps) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true' || document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [userProfile, setUserProfile] = useState<any>(null);
 
@@ -36,8 +41,16 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
   };
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    // Here you would implement actual theme switching
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('darkMode', 'false');
+    }
   };
 
   useEffect(() => {
@@ -63,11 +76,11 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
   }, [user]);
 
   return (
-    <header className="bg-white rounded-lg m-4 mb-0 p-4 shadow-sm">
+    <header className="bg-white dark:bg-gray-800 rounded-lg m-4 mb-0 p-4 shadow-sm">
       <div className="flex items-center justify-between">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300 w-4 h-4" />
           <Input
             type="text"
             placeholder="Pesquisar..."
@@ -76,7 +89,7 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
               setSearchQuery(e.target.value);
               onSearchChange?.(e.target.value);
             }}
-            className="pl-10 border-gray-200"
+            className="pl-10 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white"
           />
         </div>
 
@@ -87,12 +100,12 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            className="hover:bg-[#e3eff0]"
+            className="hover:bg-[#e3eff0] dark:hover:bg-gray-700"
           >
             {isDarkMode ? (
-              <Sun className="w-5 h-5 text-black" />
+              <Sun className="w-5 h-5 text-black dark:text-white" />
             ) : (
-              <Moon className="w-5 h-5 text-black" />
+              <Moon className="w-5 h-5 text-black dark:text-white" />
             )}
           </Button>
 
@@ -102,23 +115,23 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="hover:bg-[#e3eff0] text-black"
+                className="hover:bg-[#e3eff0] dark:hover:bg-gray-700 text-black dark:text-white"
               >
                 <User className="w-5 h-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white">
-              <DropdownMenuItem className="text-black">
+            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <DropdownMenuItem className="text-black dark:text-white">
                 <User className="w-4 h-4 mr-2" />
                 {userProfile?.nome || user?.email || 'Usuário'}
               </DropdownMenuItem>
               {userProfile?.role === 'Administrator' && (
-                <DropdownMenuItem className="text-black">
+                <DropdownMenuItem className="text-black dark:text-white">
                   <UserPlus className="w-4 h-4 mr-2" />
                   Novo Administrador
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem onClick={handleLogout} className="text-black">
+              <DropdownMenuItem onClick={handleLogout} className="text-black dark:text-white">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>

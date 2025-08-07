@@ -9,13 +9,13 @@ const navigationItems = [
 
 export const Sidebar = () => {
   return (
-    <div className="w-64 bg-white rounded-lg m-4 mr-0 p-4 shadow-sm">
+    <div className="w-64 bg-white dark:bg-gray-800 rounded-lg m-4 mr-0 p-4 shadow-sm">
       {/* Logo and Brand */}
       <div className="flex items-center space-x-3 mb-8">
-        <div className="w-10 h-10 rounded-full border-2 border-cyan-400 flex items-center justify-center bg-white">
-          <span className="text-lg font-bold text-black">OC</span>
+        <div className="w-10 h-10 rounded-full border-2 border-cyan-400 flex items-center justify-center bg-white dark:bg-gray-700">
+          <span className="text-lg font-bold text-black dark:text-white">OC</span>
         </div>
-        <span className="text-black font-medium">Operação Curiosidade</span>
+        <span className="text-black dark:text-white font-medium">Operação Curiosidade</span>
       </div>
 
       {/* Navigation */}
@@ -30,8 +30,8 @@ export const Sidebar = () => {
               className={({ isActive }) =>
                 `w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                   isActive 
-                    ? "bg-[#e3eff0] text-black" 
-                    : "text-black hover:bg-[#e3eff0]"
+                    ? "bg-[#e3eff0] dark:bg-gray-700 text-black dark:text-white" 
+                    : "text-black dark:text-white hover:bg-[#e3eff0] dark:hover:bg-gray-700"
                 }`
               }
             >

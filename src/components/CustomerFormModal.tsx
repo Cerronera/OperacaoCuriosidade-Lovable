@@ -150,7 +150,7 @@ export const CustomerFormModal = ({ isOpen, onClose, customer, onSubmit }: Custo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800">
         <DialogHeader>
           <DialogTitle>
             {customer ? 'Editar Cliente' : 'Novo Cliente'}

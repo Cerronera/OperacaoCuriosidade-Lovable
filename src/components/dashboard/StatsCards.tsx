@@ -65,9 +65,9 @@ export const StatsCards = () => {
         <div
           key={index}
           onClick={() => handleCardClick(stat.filter)}
-          className={`bg-white rounded-lg p-6 shadow-sm cursor-pointer hover:bg-[#e3eff0] transition-colors border-2 ${
+          className={`bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm cursor-pointer hover:bg-[#e3eff0] dark:hover:bg-gray-700 transition-colors border-2 ${
             activeFilter === stat.filter 
-              ? 'border-cyan-400 bg-[#e3eff0]' 
+              ? 'border-cyan-400 bg-[#e3eff0] dark:bg-gray-700' 
               : 'border-transparent hover:border-cyan-400'
           }`}
         >
@@ -75,7 +75,7 @@ export const StatsCards = () => {
             <div className={`text-4xl font-bold mb-2 ${stat.color}`}>
               {stat.value}
             </div>
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-600 dark:text-gray-300 text-sm">
               {stat.title}
             </div>
           </div>
