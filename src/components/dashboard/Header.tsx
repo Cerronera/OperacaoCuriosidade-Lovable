@@ -13,9 +13,10 @@ import { toast } from "@/hooks/use-toast";
 
 interface HeaderProps {
   user: any;
+  onSearchChange?: (query: string) => void;
 }
 
-export const Header = ({ user }: HeaderProps) => {
+export const Header = ({ user, onSearchChange }: HeaderProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -48,7 +49,10 @@ export const Header = ({ user }: HeaderProps) => {
             type="text"
             placeholder="Pesquisar..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              onSearchChange?.(e.target.value);
+            }}
             className="pl-10 border-gray-200"
           />
         </div>

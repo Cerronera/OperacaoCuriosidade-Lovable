@@ -19,14 +19,30 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Cadastro {
   id: string;
   nome: string;
   email: string;
   telefone: string;
+  endereco: string;
+  idade: number;
+  interesses?: string;
+  sentimentos?: string;
+  valores?: string;
+  outras_informacoes?: string;
   status: "Ativo" | "Inativo";
+  revisado: boolean;
   data: string;
+}
+
+interface CadastrosTableProps {
+  showActionsColumn?: boolean;
+  onEditCustomer?: (customer: any) => void;
+  onDeleteCustomer?: (customerId: string) => void;
+  searchQuery?: string;
+  refreshTrigger?: number;
 }
 
 interface PaginatedResponse {
@@ -36,7 +52,13 @@ interface PaginatedResponse {
 
 type SortDirection = "asc" | "desc";
 
-export const CadastrosTable = () => {
+export const CadastrosTable = ({ 
+  showActionsColumn = false, 
+  onEditCustomer, 
+  onDeleteCustomer,
+  searchQuery = "",
+  refreshTrigger = 0 
+}: CadastrosTableProps = {}) => {
   const [cadastros, setCadastros] = useState<Cadastro[]>([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -47,6 +69,18 @@ export const CadastrosTable = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  // Update search term when prop changes
+  useEffect(() => {
+    setSearchTerm(searchQuery);
+  }, [searchQuery]);
+
+  // Refetch when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      fetchCadastros();
+    }
+  }, [refreshTrigger]);
 
   // Debounce search term
   useEffect(() => {
@@ -116,7 +150,14 @@ export const CadastrosTable = () => {
         nome: customer.nome,
         email: customer.email,
         telefone: customer.telefone,
+        endereco: customer.endereco,
+        idade: customer.idade,
+        interesses: customer.interesses,
+        sentimentos: customer.sentimentos,
+        valores: customer.valores,
+        outras_informacoes: customer.outras_informacoes,
         status: customer.status ? "Ativo" : "Inativo",
+        revisado: customer.revisado,
         data: new Date(customer.created_at).toLocaleDateString('pt-BR')
       }));
 
@@ -179,18 +220,46 @@ export const CadastrosTable = () => {
     return status === "Ativo" ? "text-green-600" : "text-gray-500";
   };
 
+  const handleRowClick = (cadastro: Cadastro) => {
+    if (onEditCustomer) {
+      onEditCustomer({
+        id: cadastro.id,
+        nome: cadastro.nome,
+        email: cadastro.email,
+        telefone: cadastro.telefone,
+        endereco: cadastro.endereco,
+        idade: cadastro.idade,
+        interesses: cadastro.interesses,
+        sentimentos: cadastro.sentimentos,
+        valores: cadastro.valores,
+        outras_informacoes: cadastro.outras_informacoes,
+        status: cadastro.status === "Ativo",
+        revisado: cadastro.revisado,
+      });
+    }
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, customerId: string) => {
+    e.stopPropagation(); // Prevent row click when delete button is clicked
+    if (onDeleteCustomer) {
+      onDeleteCustomer(customerId);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-black">Cadastros de Clientes</h2>
-        <div className="w-80">
-          <Input
-            placeholder="Pesquisar por nome..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
-          />
-        </div>
+        {!showActionsColumn && (
+          <div className="w-80">
+            <Input
+              placeholder="Pesquisar por nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full"
+            />
+          </div>
+        )}
       </div>
       
       {loading ? (
@@ -238,18 +307,27 @@ export const CadastrosTable = () => {
                       {getSortIcon("created_at")}
                     </div>
                   </TableHead>
+                  {showActionsColumn && (
+                    <TableHead className="text-black font-medium text-center">
+                      AÇÕES
+                    </TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cadastros.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={showActionsColumn ? 6 : 5} className="text-center py-8 text-gray-500">
                       Nenhum cadastro encontrado
                     </TableCell>
                   </TableRow>
                 ) : (
                   cadastros.map((cadastro) => (
-                    <TableRow key={cadastro.id} className="hover:bg-[#e3eff0]">
+                    <TableRow 
+                      key={cadastro.id} 
+                      className={`hover:bg-[#e3eff0] ${showActionsColumn ? 'cursor-pointer' : ''}`}
+                      onClick={showActionsColumn ? () => handleRowClick(cadastro) : undefined}
+                    >
                       <TableCell className="text-black">{cadastro.nome}</TableCell>
                       <TableCell className="text-black">{cadastro.email}</TableCell>
                       <TableCell className="text-black">{cadastro.telefone}</TableCell>
@@ -257,6 +335,32 @@ export const CadastrosTable = () => {
                         {cadastro.status}
                       </TableCell>
                       <TableCell className="text-black">{cadastro.data}</TableCell>
+                      {showActionsColumn && (
+                        <TableCell className="text-center">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => handleDeleteClick(e, cadastro.id)}
+                            className="hover:bg-red-100 hover:text-red-600"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M3 6h18"></path>
+                              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                            </svg>
+                          </Button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 )}
