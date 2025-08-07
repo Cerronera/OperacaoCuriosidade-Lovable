@@ -104,22 +104,45 @@ All colors MUST be HSL.
   }
 }
 
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+textarea {
+  resize: none;
+}
+
 /* Print styles */
 @media print {
+
   .no-print,
   .print-hidden {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }
-  
+
   body {
     background: white !important;
     color: black !important;
   }
-  
+
   /* Hide sidebar and header components */
   nav,
   header,
@@ -127,20 +150,20 @@ All colors MUST be HSL.
   button {
     display: none !important;
   }
-  
+
   /* Hide sidebar and expand main content */
-  .min-h-screen.bg-gray-50.flex > div:first-child,
-  .min-h-screen.bg-\\[\\#f2f2f2\\].flex > div:first-child {
+  .min-h-screen.bg-gray-50.flex>div:first-child,
+  .min-h-screen.bg-\[\#f2f2f2\].flex>div:first-child {
     display: none !important;
   }
-  
-  .min-h-screen.bg-gray-50.flex > div:last-child,
-  .min-h-screen.bg-\\[\\#f2f2f2\\].flex > div:last-child {
+
+  .min-h-screen.bg-gray-50.flex>div:last-child,
+  .min-h-screen.bg-\[\#f2f2f2\].flex>div:last-child {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
   }
-  
+
   /* Center the main content */
   main {
     width: 100% !important;
@@ -148,19 +171,19 @@ All colors MUST be HSL.
     margin: 0 !important;
     padding: 1rem !important;
   }
-  
+
   /* Ensure table takes full width in print */
   table {
     width: 100% !important;
     font-size: 10px !important;
   }
-  
+
   /* Page breaks */
   @page {
     margin: 1cm;
     size: A4 landscape;
   }
-  
+
   thead {
     display: table-header-group;
   }
