@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth"
 
 interface PrintCadastro {
   id: string;
@@ -28,6 +29,15 @@ const Relatorios = () => {
   const [printData, setPrintData] = useState<PrintCadastro[]>([]);
   const [isPrinting, setIsPrinting] = useState(false);
   const { toast } = useToast();
+  const {loading} = useAuth();
+
+   if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f2f2f2] dark:bg-gray-900">
+        <div className="text-lg text-black dark:text-white">Carregando...</div>
+      </div>
+    );
+  }
 
   const handlePrint = async () => {
     setIsPrinting(true);

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Customer {
   id: string;
@@ -35,8 +36,7 @@ interface Customer {
 }
 
 const Cadastros = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -45,32 +45,7 @@ const Cadastros = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        navigate("/");
-        return;
-      }
-      
-      setUser(session.user);
-      setLoading(false);
-    };
 
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate("/");
-      } else {
-        setUser(session.user);
-        setLoading(false);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
 
   const handleNewCustomer = () => {
     setSelectedCustomer(null);
@@ -134,14 +109,14 @@ const Cadastros = () => {
     <div className="min-h-screen bg-[#f2f2f2] dark:bg-gray-900 flex">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Header 
-          user={user} 
+        <Header
+          user={user}
           onSearchChange={setSearchQuery}
         />
         <main className="flex-1 p-6 space-y-6">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-black dark:text-white">Cadastros</h1>
-            <Button 
+            <Button
               onClick={handleNewCustomer}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
@@ -149,8 +124,8 @@ const Cadastros = () => {
               NOVO CADASTRO
             </Button>
           </div>
-          
-          <CadastrosTable 
+
+          <CadastrosTable
             showActionsColumn={true}
             onEditCustomer={handleEditCustomer}
             onDeleteCustomer={handleDeleteCustomer}
@@ -177,7 +152,7 @@ const Cadastros = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/80"
             >

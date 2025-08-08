@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   user: any;
@@ -17,6 +18,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ user, onSearchChange }: HeaderProps) => {
+  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('darkMode') === 'true' || document.documentElement.classList.contains('dark');
@@ -32,6 +34,7 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
       toast({
         description: "Logout realizado com sucesso",
       });
+      navigate('/');
     } catch (error) {
       toast({
         variant: "destructive",
@@ -43,7 +46,7 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
   const toggleTheme = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
-    
+
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('darkMode', 'true');
@@ -56,14 +59,14 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!user) return;
-      
+
       try {
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
           .single();
-        
+
         if (!error && data) {
           setUserProfile(data);
         }
@@ -112,8 +115,8 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
           {/* User Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="icon"
                 className="hover:bg-[#e3eff0] dark:hover:bg-gray-700 text-black dark:text-white"
               >

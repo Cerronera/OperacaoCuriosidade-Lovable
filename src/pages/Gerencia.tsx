@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -29,25 +29,7 @@ const Gerencia = () => {
   const [newUserFullName, setNewUserFullName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
-    };
-
-    getSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchProfiles = async () => {
+  const fetchProfiles = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -63,13 +45,40 @@ const Gerencia = () => {
         description: "Erro ao carregar usuários"
       });
     }
-  };
+  }, []);
 
   useEffect(() => {
-    if (user) {
-      fetchProfiles();
-    }
-  }, [user]);
+    setLoading(true);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUser(session?.user);
+
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+          if (error) throw error;
+
+          setUserProfiles(data || []);
+        } catch (error) {
+          console.error('Error fetching profiles:', error);
+          toast({
+            variant: "destructive",
+            description: "Erro ao carregar usuários"
+          });
+        }
+      } else {
+        setUser(null);
+        setUserProfiles([]);
+      }
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [fetchProfiles]);
+
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,7 +157,7 @@ const Gerencia = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Gerência</h1>
-                
+
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white">

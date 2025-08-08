@@ -24,17 +24,24 @@ const Index = () => {
       });
 
       if (error) {
-        toast({
-          variant: "destructive",
-          description: "Invalid email or password",
-        });
+        if (error.message.includes("Email not confirmed")) {
+          toast({
+            variant: "destructive",
+            description: "Verifique seu email para confirmar sua conta antes de fazer login.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            description: "Email ou senha inválidos",
+          });
+        }
       } else {
         navigate("/dashboard");
       }
     } catch (error) {
       toast({
         variant: "destructive",
-        description: "Invalid email or password",
+        description: "Email ou senha inválidos",
       });
     } finally {
       setLoading(false);
@@ -52,11 +59,11 @@ const Index = () => {
             </div>
             <span className="text-sm text-muted-foreground">Operação Curiosidade</span>
           </div>
-          
+
           {/* Title */}
           <h1 className="text-2xl font-bold text-foreground">LOGIN</h1>
         </CardHeader>
-        
+
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
@@ -70,7 +77,7 @@ const Index = () => {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
               <Input
@@ -82,7 +89,7 @@ const Index = () => {
                 required
               />
             </div>
-            
+
             <Button
               type="submit"
               className="w-full bg-black text-white hover:bg-black/90"

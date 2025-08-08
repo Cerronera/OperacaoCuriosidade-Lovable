@@ -5,39 +5,11 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { CadastrosTable } from "@/components/dashboard/CadastrosTable";
+import { useAuth } from "@/hooks/useAuth"
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const {user, loading} = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        navigate("/");
-        return;
-      }
-      
-      setUser(session.user);
-      setLoading(false);
-    };
-
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate("/");
-      } else {
-        setUser(session.user);
-        setLoading(false);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
 
   if (loading) {
     return (
