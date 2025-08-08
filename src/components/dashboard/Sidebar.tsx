@@ -1,5 +1,7 @@
-import { Home, Users, BarChart3 } from "lucide-react";
+import { Home, Users, BarChart3, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const navigationItems = [
   { name: "Home", icon: Home, path: "/dashboard" },
@@ -7,7 +9,52 @@ const navigationItems = [
   { name: "Relatórios", icon: BarChart3, path: "/relatorios" },
 ];
 
+const adminOnlyItems = [
+  { name: "Gerência", icon: Settings, path: "/gerencia" },
+];
+
 export const Sidebar = () => {
+  const [user, setUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    getSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (!error && data) {
+          setUserProfile(data);
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user]);
   return (
     <div className="w-64 bg-white dark:bg-gray-800 rounded-lg m-4 mr-0 p-4 shadow-sm">
       {/* Logo and Brand */}
@@ -21,6 +68,28 @@ export const Sidebar = () => {
       {/* Navigation */}
       <nav className="space-y-2">
         {navigationItems.map((item) => {
+          const Icon = item.icon;
+          
+          return (
+            <NavLink
+              key={item.name}
+              to={item.path}
+              className={({ isActive }) =>
+                `w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                  isActive 
+                    ? "bg-[#e3eff0] dark:bg-gray-700 text-black dark:text-white" 
+                    : "text-black dark:text-white hover:bg-[#e3eff0] dark:hover:bg-gray-700"
+                }`
+              }
+            >
+              <Icon className="w-5 h-5" />
+              <span>{item.name}</span>
+            </NavLink>
+          );
+        })}
+        
+        {/* Admin Only Navigation */}
+        {userProfile?.role === 'Administrator' && adminOnlyItems.map((item) => {
           const Icon = item.icon;
           
           return (

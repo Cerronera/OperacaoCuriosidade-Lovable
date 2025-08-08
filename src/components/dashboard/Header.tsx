@@ -125,12 +125,6 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
                 <User className="w-4 h-4 mr-2" />
                 {userProfile?.nome || user?.email || 'Usuário'}
               </DropdownMenuItem>
-              {userProfile?.role === 'Administrator' && (
-                <DropdownMenuItem className="text-black dark:text-white">
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Novo Administrador
-                </DropdownMenuItem>
-              )}
               <DropdownMenuItem onClick={handleLogout} className="text-black dark:text-white">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
