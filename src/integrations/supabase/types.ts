@@ -103,6 +103,10 @@ export type Database = {
         }
         Returns: Json
       }
+      update_user_role: {
+        Args: { user_id_param: string; new_role_param: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
