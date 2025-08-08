@@ -121,11 +121,11 @@ export const Header = ({ user, onSearchChange }: HeaderProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <DropdownMenuItem className="text-black dark:text-white">
+              <DropdownMenuItem className="text-black dark:text-white cursor-default hover:bg-transparent focus:bg-transparent">
                 <User className="w-4 h-4 mr-2" />
                 {userProfile?.nome || user?.email || 'Usuário'}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} className="text-black dark:text-white">
+              <DropdownMenuItem onClick={handleLogout} className="text-black dark:text-white cursor-pointer">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>

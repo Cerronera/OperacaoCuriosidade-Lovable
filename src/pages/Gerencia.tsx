@@ -16,6 +16,7 @@ interface UserProfile {
   nome: string;
   role: string;
   created_at: string;
+  email?: string;
 }
 
 const Gerencia = () => {
@@ -25,6 +26,7 @@ const Gerencia = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserPassword, setNewUserPassword] = useState("");
+  const [newUserFullName, setNewUserFullName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -78,7 +80,10 @@ const Gerencia = () => {
         email: newUserEmail,
         password: newUserPassword,
         options: {
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            nome_completo: newUserFullName
+          }
         }
       });
 
@@ -90,6 +95,7 @@ const Gerencia = () => {
 
       setNewUserEmail("");
       setNewUserPassword("");
+      setNewUserFullName("");
       setIsModalOpen(false);
       fetchProfiles();
     } catch (error: any) {
@@ -156,6 +162,17 @@ const Gerencia = () => {
                     </DialogHeader>
                     <form onSubmit={handleCreateUser} className="space-y-4">
                       <div>
+                        <Label htmlFor="fullName" className="text-gray-700 dark:text-gray-300">Nome Completo</Label>
+                        <Input
+                          id="fullName"
+                          type="text"
+                          value={newUserFullName}
+                          onChange={(e) => setNewUserFullName(e.target.value)}
+                          required
+                          className="border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white"
+                        />
+                      </div>
+                      <div>
                         <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">Email</Label>
                         <Input
                           id="email"
@@ -216,7 +233,7 @@ const Gerencia = () => {
                           {profile.nome || 'Nome não informado'}
                         </TableCell>
                         <TableCell className="text-gray-900 dark:text-white">
-                          {profile.id}
+                          {profile.email}
                         </TableCell>
                         <TableCell>
                           <Select
