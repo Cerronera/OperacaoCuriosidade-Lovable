@@ -52,12 +52,12 @@ interface PaginatedResponse {
 
 type SortDirection = "asc" | "desc";
 
-export const CadastrosTable = ({ 
-  showActionsColumn = false, 
-  onEditCustomer, 
+export const CadastrosTable = ({
+  showActionsColumn = false,
+  onEditCustomer,
   onDeleteCustomer,
   searchQuery = "",
-  refreshTrigger = 0 
+  refreshTrigger = 0
 }: CadastrosTableProps = {}) => {
   const [cadastros, setCadastros] = useState<Cadastro[]>([]);
   const [filter, setFilter] = useState("all");
@@ -108,7 +108,7 @@ export const CadastrosTable = ({
     };
 
     window.addEventListener("filter-changed", handleFilterChange);
-    
+
     return () => {
       window.removeEventListener("filter-changed", handleFilterChange);
     };
@@ -116,7 +116,7 @@ export const CadastrosTable = ({
 
   const fetchCadastros = async () => {
     setLoading(true);
-    
+
     try {
       // Map filter names to match RPC function expectations
       let filterType = "todos";
@@ -143,7 +143,7 @@ export const CadastrosTable = ({
       }
 
       const response = data as unknown as PaginatedResponse;
-      
+
       // Transform data to match interface
       const transformedData: Cadastro[] = (response.items || []).map(customer => ({
         id: customer.id.toString(),
@@ -191,10 +191,10 @@ export const CadastrosTable = ({
   const renderPaginationItems = () => {
     const items = [];
     const maxVisiblePages = 5;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
+
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
@@ -249,18 +249,17 @@ export const CadastrosTable = ({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-black dark:text-white">Cadastros de Clientes</h2>
       </div>
-      
+
       {loading ? (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">Carregando...</div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div className="flex-grow overflow-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-100 dark:bg-gray-700">
-                  <TableHead 
+                  <TableHead
                     className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("nome")}
                   >
@@ -269,7 +268,7 @@ export const CadastrosTable = ({
                       {getSortIcon("nome")}
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("email")}
                   >
@@ -279,7 +278,7 @@ export const CadastrosTable = ({
                     </div>
                   </TableHead>
                   <TableHead className="text-black dark:text-white font-medium">TELEFONE</TableHead>
-                  <TableHead 
+                  <TableHead
                     className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("status")}
                   >
@@ -288,7 +287,7 @@ export const CadastrosTable = ({
                       {getSortIcon("status")}
                     </div>
                   </TableHead>
-                  <TableHead 
+                  <TableHead
                     className="text-black dark:text-white font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 select-none"
                     onClick={() => handleSort("created_at")}
                   >
@@ -313,8 +312,8 @@ export const CadastrosTable = ({
                   </TableRow>
                 ) : (
                   cadastros.map((cadastro) => (
-                    <TableRow 
-                      key={cadastro.id} 
+                    <TableRow
+                      key={cadastro.id}
                       className={`hover:bg-[#e3eff0] dark:hover:bg-gray-700 ${showActionsColumn ? 'cursor-pointer' : ''}`}
                       onClick={showActionsColumn ? () => handleRowClick(cadastro) : undefined}
                     >
@@ -357,13 +356,13 @@ export const CadastrosTable = ({
               </TableBody>
             </Table>
           </div>
-          
+
           {totalCount > 0 && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Mostrando {((currentPage - 1) * pageSize) + 1} a {Math.min(currentPage * pageSize, totalCount)} de {totalCount} resultados
+            <div className="flex items-center justify-between mt-4 flex-nowrap">
+              <div className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                {totalCount} {totalCount === 1 ? 'resultado' : 'Resultados'}
               </div>
-              
+
               {totalPages > 1 && (
                 <Pagination>
                   <PaginationContent>
@@ -373,7 +372,7 @@ export const CadastrosTable = ({
                         className={`cursor-pointer ${currentPage === 1 ? 'pointer-events-none opacity-50' : ''}`}
                       />
                     </PaginationItem>
-                    
+
                     {currentPage > 3 && (
                       <>
                         <PaginationItem>
@@ -386,9 +385,9 @@ export const CadastrosTable = ({
                         </PaginationItem>
                       </>
                     )}
-                    
+
                     {renderPaginationItems()}
-                    
+
                     {currentPage < totalPages - 2 && (
                       <>
                         <PaginationItem>
@@ -401,7 +400,7 @@ export const CadastrosTable = ({
                         </PaginationItem>
                       </>
                     )}
-                    
+
                     <PaginationItem>
                       <PaginationNext
                         onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}

@@ -149,9 +149,9 @@ const Gerencia = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="flex">
+      <div className="flex min-h-screen">
         <Sidebar />
-        <div className="flex-1">
+        <div className="flex-1" >
           <Header user={user} />
           <main className="p-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
