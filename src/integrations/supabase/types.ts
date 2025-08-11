@@ -65,18 +65,21 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           nome: string
           role: string
         }
         Insert: {
           created_at?: string
+          email?: string | null
           id?: string
           nome: string
           role: string
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           nome?: string
           role?: string
@@ -91,6 +94,10 @@ export type Database = {
       get_dashboard_stats: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      get_my_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_paginated_clientes: {
         Args: {
