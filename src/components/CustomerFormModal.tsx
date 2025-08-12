@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
-import { set } from "date-fns";
+import DOMPurify from "dompurify";
 
 interface Customer {
   id: string;
@@ -66,7 +66,7 @@ export const CustomerFormModal = ({ isOpen, onClose, customer, onSubmit }: Custo
 
   useEffect(() => {
     setErrors({});
-    
+
     if (customer) {
       setFormData({
         nome: customer.nome || "",
@@ -113,6 +113,10 @@ export const CustomerFormModal = ({ isOpen, onClose, customer, onSubmit }: Custo
     }
   };
 
+  const sanitizeInput = (input: string) => {
+    return DOMPurify.sanitize(input, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -120,15 +124,15 @@ export const CustomerFormModal = ({ isOpen, onClose, customer, onSubmit }: Custo
 
     try {
       const data = {
-        nome: formData.nome,
-        email: formData.email,
-        telefone: formData.telefone,
-        endereco: formData.endereco,
+        nome: sanitizeInput(formData.nome),
+        email: sanitizeInput(formData.email),
+        telefone: sanitizeInput(formData.telefone),
+        endereco: sanitizeInput(formData.endereco),
         idade: parseInt(formData.idade) || 0,
-        interesses: formData.interesses || null,
-        sentimentos: formData.sentimentos || null,
-        valores: formData.valores || null,
-        outras_informacoes: formData.outras_informacoes || null,
+        interesses: formData.interesses ? sanitizeInput(formData.interesses) : null,
+        sentimentos: formData.sentimentos ? sanitizeInput(formData.sentimentos) : null,
+        valores: formData.valores ? sanitizeInput(formData.valores) : null,
+        outras_informacoes: formData.outras_informacoes ? sanitizeInput(formData.outras_informacoes) : null,
         status: formData.status,
         revisado: customer ? true : false
       };
@@ -296,7 +300,7 @@ export const CustomerFormModal = ({ isOpen, onClose, customer, onSubmit }: Custo
               required
               maxLength={500}
             />
-             {errors.endereco && <p className="text-sm text-red-500 pt-1">{errors.endereco}</p>}
+            {errors.endereco && <p className="text-sm text-red-500 pt-1">{errors.endereco}</p>}
           </div>
 
           <div className="space-y-2">
